@@ -17,7 +17,7 @@ export class App {
   private readonly _hubConnection: signalR.HubConnection;
 
   constructor(private readonly _requestRepository: RequestRepository, private readonly _dialogService: DialogService) {
-    this._hubConnection = new signalR.HubConnectionBuilder().withUrl('http://localhost:2020').build();
+    this._hubConnection = new signalR.HubConnectionBuilder().withUrl('http://localhost:8066/requests').configureLogging(signalR.LogLevel.Information).build();
   }
 
   public async attached() {
@@ -27,15 +27,19 @@ export class App {
       localStorage.setItem('clientId', this.clientId)
     }
     await this.loadRequests();
+    await this._hubConnection.start()
 
     this._hubConnection.on('RequestRecebidoEvent', (data: any) => {
-      this.requests.push(new RequestModel(data))
+      if (data.request.clientId == this.clientId)
+        this.requests.push(new RequestModel(data.request))
     })
     this._hubConnection.on('RequestRemovidoEvent', (data: any) => {
-      this.requests = this.requests.filter(r => r.id !== data.requestId)
+      if (data.clientId == this.clientId)
+        this.requests = this.requests.filter(r => r.id !== data.requestId)
     })
     this._hubConnection.on('RequestsEsvaziadosEvent', (data: any) => {
-      this.requests = []
+      if (data.clientId == this.clientId)
+        this.requests = []
     })
   }
 

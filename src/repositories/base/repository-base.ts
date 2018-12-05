@@ -21,7 +21,7 @@ export default abstract class BaseRepository {
       let client = new HttpClient();
       client.configure(config => {
           config
-              .withBaseUrl(`http://testeapp.com/api/${this._resource}`)
+              .withBaseUrl(`http://localhost:8066/api/${this._resource}`)
               .withDefaults({
                   credentials: 'same-origin',
                   headers: {
