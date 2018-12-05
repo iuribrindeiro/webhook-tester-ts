@@ -1,0 +1,30 @@
+<template>
+  <h2 if.bind="loadingRequests">Carregando requests</h2>
+  <div class="container">
+    <div if.bind="aguardandoRequests" class="alert alert-primary" role="alert">
+      Aguardando novos requests...
+    </div>
+    <div if.bind="clientId" class="alert alert-primary" role="alert">
+      ${clientId}
+    </div>
+    <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Método</th>
+            <th scope="col">Data</th>
+            <th scope="col">Dados</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr repeat.for="request of requests">
+              <th scope="row">${request.id}</th>
+              <td class="badge ${badgeClass(request.method)}">${request.method}</td>
+              <td>${dateAsString(request.date)}</td>
+              <td class="text-right"><button click.trigger="openModal(request)" type="button" class="btn btn-primary">Dados</button></td>
+              <td class="text-right"><button click.trigger="deleteRequest(request)" type="button" class="btn btn-danger">Remover</button></td>
+          </tr>
+        </tbody>
+    </table>
+  </div>
+</template>
